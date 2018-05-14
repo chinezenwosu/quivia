@@ -20,10 +20,9 @@ class Answers extends Component {
   }
 
   selectRadio(event) {
-    this.setState({
-      selectedAnswer: event.target.value
-    })
-    this.props.selectRadio(event.target.name, event.target.value)
+    const isCorrect = event.target.value === this.props.quiz.correct_answer
+    this.setState({ selectedAnswer: event.target.value })
+    this.props.selectAnswer(this.props.index, isCorrect)
   }
 
   render() {
@@ -33,11 +32,11 @@ class Answers extends Component {
           <input
             type="radio"
             value={answer}
-            name={this.props.name}
-            checked={this.state.answer === answer}
+            name={this.props.index}
+            checked={this.state.selectedAnswer === answer}
             onChange={this.selectRadio}
           />
-          <label>{answer}</label>
+          <label dangerouslySetInnerHTML={{__html: answer }} />
         </div>
       );
     })

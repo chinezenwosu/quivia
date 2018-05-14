@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Answers from './Answers'
 import { getQuestions } from '../apis/quiz'
-import loader from '../img/loader.svg';
+import loader from '../img/loader.svg'
 
 class QuizForm extends Component {
   constructor(props) {
@@ -12,23 +12,31 @@ class QuizForm extends Component {
       loading: false,
     }
 
-    this.onClickQuickButton = this.onClickQuickButton.bind(this)
+    this.onClickQuizButton = this.onClickQuizButton.bind(this)
+    this.selectAnswer = this.selectAnswer.bind(this)
   }
 
-  onClickQuickButton() {
+  componentWillUnmount() {
+    clearInterval(this.timer)
+  }
+
+  onClickQuizButton() {
     this.setState({ loading: true })
     getQuestions((results) => {
-      console.log('clicked', results)
       this.setState({
         showQuestions: true,
         quiz: results,
         loading: false,
+        correctAnswers: 0
       })
     })
   }
 
-  handleFormSubmit() {
-    console.log('submitted')
+  selectAnswer(index, isCorrect) {
+    const correctAnswers = this.state.correctAnswers
+    if (isCorrect) {
+      this.setState({ correctAnswers: correctAnswers + 1 })
+    }
   }
 
   render() {
@@ -42,20 +50,20 @@ class QuizForm extends Component {
         return (
           <div key={index}>
             <span className='question' dangerouslySetInnerHTML={{__html: eachQuiz.question }} />
-            <Answers quiz={eachQuiz} />
+            <Answers index={index} quiz={eachQuiz} selectAnswer={(answer) => this.selectAnswer(index, answer)} />
           </div>
         )
       })
     }
     return (
       <React.Fragment>
-        <button onMouseDown={this.onClickQuickButton}>Start Quiz</button>
+        <button onMouseDown={this.onClickQuizButton}>Start Quiz</button>
         <form onSubmit={this.handleFormSubmit}>
           <div>{questions}</div>
         </form>
       </React.Fragment>
-    );
+    )
   }
 }
 
-export default QuizForm;
+export default QuizForm
