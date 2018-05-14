@@ -26,6 +26,12 @@ One paragraph of project description goes here.
 
 ### Installing
 
+Clone the application to your local machine:
+
+```
+$ git clone https://github.com/chinezenwosu/quivia.git
+```
+
 * `npm install` to resolve dependencies
 
 
