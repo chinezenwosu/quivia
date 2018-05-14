@@ -19,6 +19,7 @@ class QuizForm extends Component {
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
     this.selectAnswer = this.selectAnswer.bind(this)
     this.tickTime = this.tickTime.bind(this)
+    this.resetQuiz = this.resetQuiz.bind(this)
   }
 
   componentWillUnmount() {
@@ -29,8 +30,18 @@ class QuizForm extends Component {
     this.setState({ secondsElapsed: this.state.secondsElapsed + 1 })
   }
 
+  resetQuiz() {
+    this.setState({
+      secondsElapsed: 0,
+      showSecondsElapsed: false,
+      loading: true,
+      showQuestions: false,
+      quiz: []
+    })
+  }
+
   onClickQuizButton() {
-    this.setState({ loading: true })
+    this.resetQuiz()
     this.timer = setInterval(this.tickTime, 1000)
     getQuestions((results) => {
       this.setState({
@@ -49,7 +60,6 @@ class QuizForm extends Component {
   }
 
   handleFormSubmit(event) {
-    console.log('submitted', this.state.correctAnswers)
     clearInterval(this.timer)
     this.setState({ showSecondsElapsed: true })
     event.preventDefault()
@@ -91,7 +101,7 @@ class QuizForm extends Component {
     } else {
       return (
         <React.Fragment>
-          { !this.state.showQuestions && <button onMouseDown={this.onClickQuizButton}>Start Quiz</button> }
+          { !(this.state.showQuestions || this.state.loading) && <button onMouseDown={this.onClickQuizButton}>Start Quiz</button> }
           <form onSubmit={this.handleFormSubmit}>
             <div>{questions}</div>
             <div>{submitButton}</div>
