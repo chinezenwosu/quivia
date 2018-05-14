@@ -10,24 +10,33 @@ class QuizForm extends Component {
       showQuestions: false,
       quiz: [],
       loading: false,
+      secondsElapsed: 0,
+      showSecondsElapsed: false,
+      correctAnswers: 0,      
     }
 
     this.onClickQuizButton = this.onClickQuizButton.bind(this)
+    this.handleFormSubmit = this.handleFormSubmit.bind(this)
     this.selectAnswer = this.selectAnswer.bind(this)
+    this.tickTime = this.tickTime.bind(this)
   }
 
   componentWillUnmount() {
     clearInterval(this.timer)
   }
 
+  tickTime() {
+    this.setState({ secondsElapsed: this.state.secondsElapsed + 1 })
+  }
+
   onClickQuizButton() {
     this.setState({ loading: true })
+    this.timer = setInterval(this.tickTime, 1000)
     getQuestions((results) => {
       this.setState({
         showQuestions: true,
         quiz: results,
         loading: false,
-        correctAnswers: 0
       })
     })
   }
@@ -39,8 +48,18 @@ class QuizForm extends Component {
     }
   }
 
+  handleFormSubmit(event) {
+    console.log('submitted', this.state.correctAnswers)
+    clearInterval(this.timer)
+    this.setState({ showSecondsElapsed: true })
+    event.preventDefault()
+  }
+
   render() {
     let questions
+    let submitButton
+    let secondsElapsed
+
     if (this.state.loading) {
       questions = <img src={loader} className="loader" alt="Loading..." />
     }
@@ -54,15 +73,32 @@ class QuizForm extends Component {
           </div>
         )
       })
+      submitButton = <button>Submit Quiz</button>
     }
-    return (
-      <React.Fragment>
-        <button onMouseDown={this.onClickQuizButton}>Start Quiz</button>
-        <form onSubmit={this.handleFormSubmit}>
-          <div>{questions}</div>
-        </form>
-      </React.Fragment>
-    )
+
+    if (this.state.showSecondsElapsed) {
+      secondsElapsed = (
+        <span className='time-log'>
+          {`You got ${this.state.correctAnswers}/${this.state.quiz.length} answers in ${this.state.secondsElapsed} ${this.state.secondsElapsed > 1 ? 'seconds' : 'second'}!`}
+        </span>
+      )
+      return (
+        <div>
+          {secondsElapsed}
+          <button onMouseDown={this.onClickQuizButton}>Play Again</button>
+        </div>
+      )
+    } else {
+      return (
+        <React.Fragment>
+          { !this.state.showQuestions && <button onMouseDown={this.onClickQuizButton}>Start Quiz</button> }
+          <form onSubmit={this.handleFormSubmit}>
+            <div>{questions}</div>
+            <div>{submitButton}</div>
+          </form>
+        </React.Fragment>
+      )
+    }
   }
 }
 

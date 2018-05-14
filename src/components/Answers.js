@@ -14,7 +14,7 @@ class Answers extends Component {
   componentWillMount() {
     const quiz = this.props.quiz
     const incorrectAnswers = quiz.incorrect_answers
-    const randomCorrectAnswerPosition = Math.floor((Math.random() * incorrectAnswers.length) + 1);
+    const randomCorrectAnswerPosition = Math.floor((Math.random() * incorrectAnswers.length + 1) + 0);
     incorrectAnswers.splice(randomCorrectAnswerPosition, 0, quiz.correct_answer)
     this.allAnswers = incorrectAnswers
   }
