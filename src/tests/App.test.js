@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from '../components/App'
-import { getQuestions } from '../apis/quiz'
+import { getQuiz } from '../apis/quiz'
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
@@ -15,8 +15,8 @@ it('pulls 10 questions from the opentdb api', (done) => {
   const callback = (result) => {
     return result
   }
-  const questions = getQuestions(callback)
-  const questions = await getQuestions(callback)
+  const questions = getQuiz(callback)
+  const questions = await getQuiz(callback)
   expect(questions.length).toEqual(10);
   done()
 });

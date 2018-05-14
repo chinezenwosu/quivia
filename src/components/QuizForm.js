@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Answers from './Answers'
-import { getQuestions } from '../apis/quiz'
+import { getQuiz } from '../apis/quiz'
 import loader from '../img/loader.svg'
 
 class QuizForm extends Component {
@@ -43,7 +43,7 @@ class QuizForm extends Component {
   onClickQuizButton() {
     this.resetQuiz()
     this.timer = setInterval(this.tickTime, 1000)
-    getQuestions((results) => {
+    getQuiz((results) => {
       this.setState({
         showQuestions: true,
         quiz: results,
